@@ -24,27 +24,38 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const { setUser, setIsLoading } = useAuthStore();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        supabase.from('profiles').select('*').eq('id', session.user.id).single()
-          .then(({ data }) => {
-             if (data) setUser(data as User);
-             setIsLoading(false);
-          });
-      } else {
-        setIsLoading(false);
+    const handleUserData = async (session: any) => {
+      if (!session) {
+        setUser(null);
+        return;
       }
+
+      // Try to get from profiles
+      const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+      
+      if (profile) {
+        setUser(profile as User);
+      } else {
+        // Fallback to metadata
+        const metadata = session.user.user_metadata;
+        setUser({
+          id: session.user.id,
+          name: metadata?.full_name || metadata?.name || 'User',
+          email: session.user.email!,
+          role: metadata?.role || 'citizen',
+          department: metadata?.department,
+          language: metadata?.language || 'English',
+          civic_points: metadata?.civic_points || 0
+        });
+      }
+    };
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      handleUserData(session).finally(() => setIsLoading(false));
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        supabase.from('profiles').select('*').eq('id', session.user.id).single()
-          .then(({ data }) => {
-             if (data) setUser(data as User);
-          });
-      } else {
-        setUser(null);
-      }
+      handleUserData(session);
     });
 
     return () => subscription.unsubscribe();

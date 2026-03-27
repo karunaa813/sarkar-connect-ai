@@ -56,7 +56,11 @@ export default function LoginPage() {
           <div className="w-16 h-16 rounded-2xl bg-primary-foreground/20 backdrop-blur flex items-center justify-center mb-8">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="font-display text-4xl font-bold mb-4">Sarkar Connect AI</h1>
+          <h1 className="font-display text-4xl font-bold mb-4">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D35400] via-[#FDFAEF] to-[#1E5D1D]">
+              Sarkar Connect AI
+            </span>
+          </h1>
           <p className="text-primary-foreground/80 text-lg leading-relaxed">
             Your digital gateway to transparent governance. File complaints, track progress, and hold departments accountable.
           </p>
@@ -76,7 +80,7 @@ export default function LoginPage() {
             {isSignup ? 'Create Account' : 'Welcome Back'}
           </h2>
           <p className="text-muted-foreground mb-8">
-            {isSignup ? 'Join millions of citizens on Sarkar Connect' : 'Sign in to access your dashboard'}
+            {isSignup ? 'Join millions of citizens on Sarkar Connect AI' : 'Sign in to access your dashboard'}
           </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             {isSignup && (

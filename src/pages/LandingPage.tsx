@@ -19,6 +19,8 @@ const stats = [
   { value: '98%', label: 'Citizen Satisfaction' },
 ];
 
+
+
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
@@ -31,10 +33,11 @@ export default function LandingPage() {
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg gradient-hero flex items-center justify-center">
-              <Shield className="w-5 h-5 text-primary-foreground" />
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="font-sans font-black text-xl tracking-tighter text-[#FF9933]">Sarkar</span>
+              <span className="font-sans font-black text-xl tracking-tighter text-white">Connect</span>
+              <span className="font-sans font-black text-xl tracking-tighter text-[#128807]">AI</span>
             </div>
-            <span className="font-display font-bold text-lg text-foreground">Sarkar Connect</span>
           </Link>
           <div className="hidden md:flex items-center gap-6">
             <a href="#features" className="nav-link">Features</a>
@@ -65,7 +68,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
           >
             Your Voice,{' '}
-            <span className="text-primary">India's Action</span>
+            <span className="text-accent">India's Action</span>
           </motion.h1>
           <motion.p
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
@@ -78,8 +81,10 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
           >
             <Link to="/login">
-              <Button variant="hero" size="xl">File a Complaint <ArrowRight className="w-5 h-5" /></Button>
+              <Button size="xl" className="bg-accent hover:bg-accent/90 text-accent-foreground font-black px-12 h-16 rounded-2xl shadow-xl shadow-accent/10">File a Complaint <ArrowRight className="w-6 h-6 ml-2" /></Button>
             </Link>
+
+
             <Link to="/admin-login">
               <Button variant="outline" size="xl">Government Login</Button>
             </Link>
@@ -144,11 +149,10 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="py-12 px-4 border-t border-border/50">
         <div className="container mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg gradient-hero flex items-center justify-center">
-              <Shield className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="font-display font-bold text-foreground">Sarkar Connect AI</span>
+          <div className="flex items-center justify-center gap-1.5 mb-4">
+            <span className="font-sans font-black text-lg tracking-tighter text-[#FF9933]">Sarkar</span>
+            <span className="font-sans font-black text-lg tracking-tighter text-white">Connect</span>
+            <span className="font-sans font-black text-lg tracking-tighter text-[#128807]">AI</span>
           </div>
           <p className="text-muted-foreground text-sm">Empowering citizens. Transforming governance. Built for India 🇮🇳</p>
         </div>

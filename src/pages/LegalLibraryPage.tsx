@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Search,
-  Book,
-  Scale,
-  Shield,
-  Info,
-  Download,
+import { 
+  Search, 
+  Book, 
+  Scale, 
+  Shield, 
+  Info, 
+  Download, 
   ExternalLink,
   MessageSquare,
   Send,
@@ -141,7 +141,7 @@ const LegalLibraryPage: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isPlaying, setIsPlaying] = useState<string | null>(null);
   const [selectedAct, setSelectedAct] = useState<Act | null>(null);
-
+  
   const chatEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -158,9 +158,9 @@ const LegalLibraryPage: React.FC = () => {
 
     setIsPlaying(messageId);
     try {
-      const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
+      const ELEVENLABS_API_KEY = "949a2122ccf03531b7829703415c8959";
       const VOICE_ID = 'EXAVITQu4vr4xnSDxMaL';
-
+      
       const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
         method: 'POST',
         headers: {
@@ -181,7 +181,7 @@ const LegalLibraryPage: React.FC = () => {
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
-
+      
       if (audioRef.current) {
         audioRef.current.src = url;
         audioRef.current.play();
@@ -195,7 +195,7 @@ const LegalLibraryPage: React.FC = () => {
 
   const filteredActs = acts.filter(act => {
     const matchesSearch = act.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      act.description.toLowerCase().includes(searchQuery.toLowerCase());
+                         act.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || act.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -220,31 +220,29 @@ const LegalLibraryPage: React.FC = () => {
         const secNum = String(section.Section || "");
         const secName = (section["Section _name"] || section["Section_name"] || "").toLowerCase();
         const desc = (section.Description || "").toLowerCase();
-
+        
         const sectionMatch = query.match(/section\s*(\d+)/i);
         if (sectionMatch && sectionMatch[1] === secNum) return true;
-
+        
         return secName.includes(query) || (query.length > 5 && desc.includes(query));
       }).slice(0, 3);
 
-      const contextText = matchedSections.length > 0
+      const contextText = matchedSections.length > 0 
         ? matchedSections.map(s => `[VERIFIED LEGAL DATA: Section ${s.Section} - ${s["Section _name"] || s["Section_name"]}\nText: ${s.Description}]`).join("\n\n")
         : "No direct section match found in BNS 2023 dataset. Using general BNS principles.";
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const API_KEY = "AIzaSyBBLQm5L6XhXK5eHQaa_-bzRLrfz_N8l_M";
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-          'HTTP-Referer': 'https://sarkar-connect.ai',
-          'X-Title': 'Sarkar Connect AI',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'openai/gpt-4o-mini',
-          messages: [
-            {
-              role: 'system',
-              content: `You are a Multilingual Pro-bono Legal AI Assistant specialized in Bharatiya Nyaya Sanhita (BNS) 2023.
+          contents: [{
+            parts: [{
+              text: `You are a Multilingual Pro-bono Legal AI Assistant specialized in Bharatiya Nyaya Sanhita (BNS) 2023.
               
               STRICT RULES:
               1. RESPOND IN THE LANGUAGE USED BY THE USER (Hindi, Marathi, English, Tamil, etc.).
@@ -259,23 +257,29 @@ const LegalLibraryPage: React.FC = () => {
               - Be empathetic and professional.
               
               CONTEXT DATA:
-              ${contextText}`
-            },
-            { role: 'user', content: query }
-          ]
+              ${contextText}
+              
+              USER QUESTION: ${query}`
+            }]
+          }],
+          generationConfig: {
+            maxOutputTokens: 2048,
+          }
         })
       });
 
       const data = await response.json();
 
-      if (!response.ok || !data.choices || data.choices.length === 0) {
-        throw new Error(data.error?.message || 'Failed to connect to Legal Database');
+      if (!response.ok || !data.candidates || data.candidates.length === 0) {
+        throw new Error(data.error?.message || 'Failed to connect to Google Legal Database');
       }
+
+      const botContent = data.candidates[0].content.parts[0].text;
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: data.choices[0].message.content,
+        content: botContent,
         timestamp: new Date(),
         metadata: {
           sections: matchedSections,
@@ -302,7 +306,7 @@ const LegalLibraryPage: React.FC = () => {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <audio ref={audioRef} className="hidden" />
-
+      
       <div className="max-w-7xl mx-auto p-6 pt-32 pb-32 space-y-8">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -314,7 +318,7 @@ const LegalLibraryPage: React.FC = () => {
               Access the complete digital manuals for Indian Laws and consult our AI-powered legal assistant.
             </p>
           </div>
-          <button
+          <button 
             onClick={() => setIsAIChatOpen(true)}
             className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium transition-all shadow-lg shadow-blue-900/20 active:scale-95 text-white"
           >
@@ -340,10 +344,11 @@ const LegalLibraryPage: React.FC = () => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category as any)}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${selectedCategory === category
-                    ? 'bg-blue-600 text-white font-medium'
+                className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                  selectedCategory === category 
+                    ? 'bg-blue-600 text-white font-medium' 
                     : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                  }`}
+                }`}
               >
                 {category}
               </button>
@@ -364,7 +369,7 @@ const LegalLibraryPage: React.FC = () => {
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                 {act.icon}
               </div>
-
+              
               <div className="flex items-start gap-4 mb-6">
                 <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400 group-hover:scale-110 transition-transform shadow-lg shadow-blue-500/10">
                   {act.icon}
@@ -381,13 +386,13 @@ const LegalLibraryPage: React.FC = () => {
                   </h3>
                 </div>
               </div>
-
+              
               <p className="text-gray-400 mb-8 flex-grow leading-relaxed">
                 {act.description}
               </p>
-
+              
               <div className="flex items-center gap-3 pt-6 border-t border-gray-800/50 mt-auto">
-                <button
+                <button 
                   onClick={() => setSelectedAct(act)}
                   className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-xl transition-all font-medium text-sm border border-gray-700"
                 >
@@ -424,11 +429,11 @@ const LegalLibraryPage: React.FC = () => {
             className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 pb-0 md:pb-4"
           >
             {/* Backdrop */}
-            <div
+            <div 
               className="absolute inset-0 bg-black/80 backdrop-blur-md"
               onClick={() => setIsAIChatOpen(false)}
             />
-
+            
             <motion.div
               initial={{ scale: 0.9, y: 50, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -453,7 +458,7 @@ const LegalLibraryPage: React.FC = () => {
                     <p className="text-xs text-gray-500">Multilingual Voice Support • BNS 2023 GAZETTE</p>
                   </div>
                 </div>
-                <button
+                <button 
                   onClick={() => setIsAIChatOpen(false)}
                   className="p-2 hover:bg-gray-800/50 rounded-xl transition-all"
                 >
@@ -464,32 +469,35 @@ const LegalLibraryPage: React.FC = () => {
               {/* Chat Content */}
               <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 scrollbar-thin scrollbar-thumb-gray-800">
                 {chatMessages.map((msg) => (
-                  <div
-                    key={msg.id}
+                  <div 
+                    key={msg.id} 
                     className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div className={`flex gap-3 max-w-[85%] ${msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-lg shrink-0 ${msg.type === 'user' ? 'bg-indigo-600' : 'bg-blue-600'
-                        }`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-lg shrink-0 ${
+                        msg.type === 'user' ? 'bg-indigo-600' : 'bg-blue-600'
+                      }`}>
                         {msg.type === 'user' ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-white" />}
                       </div>
                       <div className={`space-y-2 ${msg.type === 'user' ? 'items-end' : 'items-start'}`}>
-                        <div className={`p-4 rounded-2xl shadow-xl relative group ${msg.type === 'user'
-                            ? 'bg-indigo-600/20 border border-indigo-500/30 text-white rounded-tr-none'
+                        <div className={`p-4 rounded-2xl shadow-xl relative group ${
+                          msg.type === 'user' 
+                            ? 'bg-indigo-600/20 border border-indigo-500/30 text-white rounded-tr-none' 
                             : 'bg-gray-900 border border-gray-800 text-gray-100 rounded-tl-none'
-                          }`}>
+                        }`}>
                           {msg.type === 'bot' && (
-                            <button
+                            <button 
                               onClick={() => speakText(msg.content, msg.id)}
-                              className={`absolute -right-12 top-0 p-2.5 rounded-xl transition-all border shadow-lg ${isPlaying === msg.id
-                                  ? 'bg-blue-600 border-blue-500 text-white animate-pulse'
+                              className={`absolute -right-12 top-0 p-2.5 rounded-xl transition-all border shadow-lg ${
+                                isPlaying === msg.id 
+                                  ? 'bg-blue-600 border-blue-500 text-white animate-pulse' 
                                   : 'bg-gray-900 border-gray-800 text-gray-400 hover:text-blue-400'
-                                }`}
+                              }`}
                             >
                               {isPlaying === msg.id ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                             </button>
                           )}
-
+                          
                           <div className="whitespace-pre-wrap leading-relaxed text-[15px]">
                             {msg.content.split('\n').map((line, i) => {
                               const parts = line.split(/(\*\*.*?\*\*)/g);
@@ -505,7 +513,7 @@ const LegalLibraryPage: React.FC = () => {
                               );
                             })}
                           </div>
-
+                          
                           {msg.metadata?.sections && msg.metadata.sections.length > 0 && (
                             <div className="mt-4 flex flex-wrap gap-2 pt-4 border-t border-gray-800/50">
                               {msg.metadata.sections.map((s: any, idx) => (
@@ -558,13 +566,13 @@ const LegalLibraryPage: React.FC = () => {
                   "Explain BNS Section 113",
                   "Cyber Stallking laws"
                 ].map((s) => (
-                  <button
+                   <button
                     key={s}
                     onClick={() => setUserInput(s)}
                     className="px-3 py-1.5 bg-gray-900/50 hover:bg-gray-800 border border-gray-800 rounded-full text-xs text-gray-400 hover:text-blue-400 transition-all whitespace-nowrap active:scale-95"
-                  >
-                    {s}
-                  </button>
+                   >
+                     {s}
+                   </button>
                 ))}
               </div>
 
@@ -582,7 +590,7 @@ const LegalLibraryPage: React.FC = () => {
                     placeholder="Ask in Hindi, English, Marathi or any language..."
                     className="flex-1 bg-transparent border-none focus:outline-none text-[15px] py-2"
                   />
-                  <button
+                  <button 
                     onClick={handleSend}
                     disabled={!userInput.trim() || isTyping}
                     className="p-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:bg-gray-800 rounded-xl transition-all text-white shadow-lg active:scale-95"
@@ -592,11 +600,11 @@ const LegalLibraryPage: React.FC = () => {
                 </div>
                 <div className="mt-4 flex items-center justify-center gap-6">
                   <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
-                    <Scale className="w-3 h-3" />
+                    <Scale className="w-3 h-3" /> 
                     Multilingual Legal Awareness
                   </div>
                   <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
-                    <Volume2 className="w-3 h-3" />
+                    <Volume2 className="w-3 h-3" /> 
                     AI Voice Enabled
                   </div>
                 </div>
@@ -615,7 +623,7 @@ const LegalLibraryPage: React.FC = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[110] flex items-center justify-center p-4 backdrop-blur-xl bg-black/60"
           >
-            <div
+            <div 
               className="absolute inset-0"
               onClick={() => setSelectedAct(null)}
             />
@@ -636,7 +644,7 @@ const LegalLibraryPage: React.FC = () => {
                     <p className="text-sm text-gray-400">Digital Reference Manual • {selectedAct.year}</p>
                   </div>
                 </div>
-                <button
+                <button 
                   onClick={() => setSelectedAct(null)}
                   className="p-2 hover:bg-gray-800 rounded-xl transition-all"
                 >
@@ -648,8 +656,8 @@ const LegalLibraryPage: React.FC = () => {
                 {selectedAct.manual?.chapters.map((chapter, cIdx) => (
                   <div key={cIdx} className="space-y-6">
                     <h4 className="text-xl font-bold text-blue-400 border-b border-blue-500/20 pb-2 flex items-center gap-2">
-                      <HelpCircle className="w-5 h-5" />
-                      {chapter.title}
+                       <HelpCircle className="w-5 h-5" />
+                       {chapter.title}
                     </h4>
                     <div className="grid gap-6">
                       {chapter.sections.map((section, sIdx) => (

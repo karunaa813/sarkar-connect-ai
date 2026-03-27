@@ -26,12 +26,25 @@ export default function Navbar() {
             <Shield className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="font-sans font-black text-xl tracking-tight text-white leading-none">
-              SarkarConnect AI
-            </span>
-            <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase mt-1">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="font-display font-bold text-[1.75rem] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#D35400] via-[#FDFAEF] to-[#1E5D1D]">
+                Sarkar Connect AI
+              </span>
+              <div className="w-6 h-6 rounded-full border-2 border-[#F6ECD5]/40 flex items-center justify-center ml-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#F6ECD5]/60 animate-spin-slow" />
+                <div className="absolute w-5 h-[1px] bg-[#F6ECD5]/20 rotate-45" />
+                <div className="absolute w-5 h-[1px] bg-[#F6ECD5]/20 -rotate-45" />
+                <div className="absolute w-5 h-[1px] bg-[#F6ECD5]/20 rotate-90" />
+                <div className="absolute w-5 h-[1px] bg-[#F6ECD5]/20" />
+              </div>
+            </div>
+            <span className="text-[10px] font-bold tracking-[0.2em] text-[#F6ECD5]/50 uppercase mt-2">
               National Justice Portal
             </span>
+          </div>
+
+
           </div>
         </Link>
 
@@ -66,7 +79,7 @@ export default function Navbar() {
           </Link>
           <Button 
             onClick={() => logout()}
-            className="bg-gradient-to-r from-warning to-[#ca8a04] hover:opacity-90 text-black font-bold rounded-xl px-6 border-none shadow-[0_0_20px_rgba(234,179,8,0.2)]"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground font-black rounded-xl px-6 border-none shadow-lg shadow-accent/10"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Sign Out

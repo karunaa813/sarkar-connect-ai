@@ -6,52 +6,58 @@
 
 @layer base {
   :root {
-    --background: 240 10% 2%;
+    --background: 222 47% 11%;
     --foreground: 0 0% 98%;
 
-    --card: 240 10% 4%;
+    --card: 222 47% 13%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 10% 4%;
+    --popover: 222 47% 13%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 10% 8%;
+    --secondary: 222 47% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 10% 8%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 222 20% 25%;
+    --muted-foreground: 222 15% 75%;
 
-    --accent: 45 90% 60%;
-    --accent-foreground: 240 10% 4%;
+    --accent: 45 93% 47%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 10% 12%;
-    --input: 240 10% 12%;
-    --ring: 217 91% 60%;
+    --border: 222 47% 18%;
+    --input: 222 47% 18%;
+    --ring: 45 93% 47%;
+
+    --saffron: 25 95% 53%;
+    --indian-green: 115 91% 28%;
 
     --radius: 0.75rem;
 
     --success: 150 60% 40%;
     --success-foreground: 0 0% 100%;
-    --warning: 45 90% 50%;
-    --warning-foreground: 240 10% 4%;
+    --warning: 45 93% 47%;
+    --warning-foreground: 222 47% 11%;
     --info: 217 91% 60%;
     --info-foreground: 0 0% 100%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(217 91% 10%), hsl(240 10% 2%));
-    --gradient-gold: linear-gradient(135deg, #eab308, #ca8a04);
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 15%), hsl(222 47% 11%));
+    --gradient-gold: linear-gradient(135deg, #f59e0b, #d97706);
     --gradient-saffron: linear-gradient(135deg, hsl(25 95% 53%), hsl(15 90% 45%));
-    --gradient-green: linear-gradient(135deg, hsl(150 45% 40%), hsl(160 50% 30%));
-    --gradient-card: linear-gradient(180deg, hsl(240 10% 6% / 0.8), hsl(240 10% 2% / 0.95));
+    --gradient-green: linear-gradient(135deg, hsl(115 91% 28%), hsl(120 100% 20%));
+    --gradient-card: linear-gradient(180deg, hsl(222 47% 14% / 0.8), hsl(222 47% 11% / 0.95));
+    --gradient-tricolor: linear-gradient(to right, hsl(var(--saffron)), #ffffff 50%, hsl(var(--indian-green)));
 
-    --shadow-card: 0 8px 32px -8px rgba(0, 0, 0, 0.8);
-    --shadow-elevated: 0 12px 48px -12px rgba(0, 0, 0, 0.9);
-    --shadow-glow: 0 0 40px rgba(100, 150, 255, 0.1);
+    --shadow-card: 0 8px 32px -8px rgba(0, 0, 0, 0.5);
+    --shadow-elevated: 0 12px 48px -12px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.1);
+
+
   }
 
   .dark {

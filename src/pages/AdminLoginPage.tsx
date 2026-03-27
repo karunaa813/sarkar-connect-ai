@@ -25,8 +25,9 @@ export default function AdminLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!department) { setError('Select a department'); return; }
-    if (code !== DEPT_CODES[department]) {
-      setError('Invalid department code. Contact your department admin.');
+    const validCode = DEPT_CODES[department as Department];
+    if (code.trim().toUpperCase() !== validCode.toUpperCase()) {
+      setError(`Invalid code for ${department}. Use the demo code provided below.`);
       return;
     }
 
@@ -104,7 +105,7 @@ export default function AdminLoginPage() {
           </form>
           <div className="mt-6 p-4 rounded-lg bg-muted/50">
             <p className="text-xs text-muted-foreground text-center">
-              <strong>Demo codes:</strong> Water: WAT-2024, Electricity: ELC-2024, Roads: RDS-2024, Sanitation: SAN-2024, Safety: SAF-2024, Health: HLT-2024
+              <strong>Demo codes:</strong> Water: WAT-2024, Electricity: ELC-2024, Roads: RDS-2024, Sanitation: SAN-2024, Safety: SAF-2024, Health: HLT-2024, Education: EDU-2024
             </p>
           </div>
         </div>
